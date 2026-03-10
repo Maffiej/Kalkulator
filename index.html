@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator JDG → Sp. z o.o. | Optymalizacja podatkowa</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1A170F;
+      --paper: #F5F2EB;
+      --cream: #EDE8DE;
+      --gold: #64503C;
+      --gold-light: #DCDCC8;
+      --red: #8B3A2A;
+      --green: #3C5040;
+      --green-light: #E8EDE5;
+      --muted: #7A7464;
+      --border: #C8C4B4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1A170F;
+      color: var(--paper);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 168, 76, 0.15);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 56px 32px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #DCDCC8;
+      border: 1px solid #64503C;
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    h1 span {
+      color: #DCDCC8;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: rgba(220, 220, 200, 0.7);
+      font-weight: 300;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+
+    .stawki-info {
+      margin-top: 20px;
+      font-size: 12px;
+      color: rgba(220, 220, 200, 0.45);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 32px;
+    }
+
+    .intro-text {
+      background: var(--cream);
+      border-left: 3px solid #64503C;
+      padding: 20px 24px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 40px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .intro-text strong {
+      color: var(--ink);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #C8C4B4;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .field label .hint {
+      font-weight: 300;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field input,
+    .field select {
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      background: white;
+      color: var(--ink);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #DCDCC8;
+      box-shadow: 0 0 0 3px rgba(100, 80, 60, 0.15);
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: 16px;
+      background: #1A170F;
+      color: var(--paper);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #64503C;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .calc-btn:hover::after {
+      opacity: 0.12;
+    }
+
+    .calc-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    #wyniki {
+      display: none;
+    }
+
+    #wyniki.visible {
+      display: block;
+    }
+
+    .results-header {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .results-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 600px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card-jdg {
+      border: 1.5px solid #e0d5cc;
+    }
+
+    .card-spzoo {
+      border: 2px solid #64503C;
+    }
+
+    .card-head {
+      padding: 16px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card-jdg .card-head {
+      background: #f0ebe4;
+      color: var(--muted);
+    }
+
+    .card-spzoo .card-head {
+      background: #1A170F;
+      color: #DCDCC8;
+    }
+
+    .card-body {
+      padding: 20px;
+      background: white;
+    }
+
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--cream);
+      font-size: 14px;
+    }
+
+    .line-item:last-child {
+      border-bottom: none;
+    }
+
+    .line-label {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .line-value {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .line-value.red {
+      color: var(--red);
+    }
+
+    .line-value.green {
+      color: var(--green);
+    }
+
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 2px solid #1A170F;
+    }
+
+    .total-label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .total-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .total-value.highlight {
+      color: var(--green);
+    }
+
+    .savings-banner {
+      background: #1A170F;
+      color: var(--paper);
+      border-radius: 10px;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .savings-text {
+      font-size: 14px;
+      color: rgba(250, 248, 243, 0.7);
+      line-height: 1.5;
+    }
+
+    .savings-text strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .savings-note {
+      font-size: 12px;
+      color: rgba(250, 248, 243, 0.5);
+    }
+
+    .benefits-section {
+      margin-bottom: 40px;
+    }
+
+    .benefits-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .benefit-card {
+      background: var(--green-light);
+      border: 1px solid #C0BCAC;
+      border-radius: 8px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .benefit-icon {
+      width: 32px;
+      height: 32px;
+      background: #3C5040;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .benefit-text strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .benefit-text span {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Tabela szczegółowa */
+    .detail-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 32px;
+      font-size: 13px;
+    }
+
+    .detail-box h4 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--cream);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-row .label {
+      color: var(--muted);
+    }
+
+    .detail-row .val {
+      font-weight: 500;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, #1A170F 0%, #2E2820 100%);
+      border-radius: 12px;
+      padding: 36px 40px;
+      text-align: center;
+      color: var(--paper);
+      margin-bottom: 16px;
+    }
+
+    .cta-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .cta-box p {
+      font-size: 14px;
+      color: rgba(220, 220, 200, 0.7);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: #DCDCC8;
+      color: #1A170F;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(100, 80, 60, 0.4);
+    }
+
+    .cta-phone {
+      margin-top: 16px;
+      font-size: 13px;
+      color: rgba(250, 248, 243, 0.45);
+    }
+
+    .cta-phone a {
+      color: #DCDCC8;
+      text-decoration: none;
+    }
+
+    .disclaimer {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+      padding: 16px;
+      background: var(--cream);
+      border-radius: 6px;
+      margin-top: 32px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 24px;
+    }
+
+    footer strong {
+      color: var(--ink);
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #wyniki.visible>* {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    #wyniki.visible>*:nth-child(2) {
+      animation-delay: 0.08s;
+    }
+
+    #wyniki.visible>*:nth-child(3) {
+      animation-delay: 0.16s;
+    }
+
+    #wyniki.visible>*:nth-child(4) {
+      animation-delay: 0.24s;
+    }
+
+    #wyniki.visible>*:nth-child(5) {
+      animation-delay: 0.32s;
+    }
+
+    .logo-safetax {
+      display: inline-block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: #EDE5D8;
+      margin-bottom: 28px;
+      line-height: 1;
+    }
+
+    .logo-tax {
+      color: #DCDCC8;
+      opacity: 0.6;
+      font-weight: 400;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+
+      <span class="logo-safetax">SAFE<span class="logo-tax">TAX</span></span>
+      <h1>JDG czy <span>Sp. z o.o.?</span><br>Policz swoją korzyść.</h1>
+      <p class="subtitle">Bezpłatny kalkulator optymalizacji podatkowej. Sprawdź ile realnie możesz zaoszczędzić
+        przechodząc na spółkę z o.o.</p>
+      <p class="stawki-info">Stawki aktualne na 2025 rok · Duży ZUS: 1 773,96 zł/mies. · Składka zdrowotna: wg dochodu ·
+        CIT 9% dla małych podatników</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="intro-text">
+      <strong>Jak korzystać z kalkulatora?</strong> Wprowadź swoje dane finansowe z ostatniego roku lub prognozowane.
+      Kalkulator wyliczy obciążenia podatkowe i ZUS w obu wariantach oraz pokaże realną różnicę. Wyniki są przybliżone —
+      ostateczna optymalizacja wymaga analizy indywidualnej.
+    </div>
+
+    <div class="section-label">Dane do kalkulacji</div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Przychód roczny (brutto) <span class="hint">PLN</span></label>
+        <input type="number" id="przychod" placeholder="np. 300 000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label>Koszty uzyskania przychodu <span class="hint">PLN/rok</span></label>
+        <input type="number" id="koszty" placeholder="np. 60 000" min="0" step="1000">
+      </div>
+      <div class="field">
+        <label>Forma opodatkowania JDG</label>
+        <select id="forma_jdg">
+          <option value="liniowy">Podatek liniowy (19%)</option>
+          <option value="skala">Skala podatkowa (12/32%)</option>
+          <option value="ryczalt">Ryczałt ewidencjonowany</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Stawka ryczałtu <span class="hint">(tylko dla ryczałtu)</span></label>
+        <select id="ryczalt_stawka">
+          <option value="0.12">12% – IT, wolne zawody</option>
+          <option value="0.085">8,5% – usługi</option>
+          <option value="0.055">5,5% – działalność wytwórcza</option>
+          <option value="0.03">3% – handel</option>
+          <option value="0.15">15% – niektóre usługi</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Planowane wynagrodzenie w Sp. z o.o. <span class="hint">PLN/mies. brutto</span></label>
+        <input type="number" id="wynagrodzenie" placeholder="np. 7 000" min="0" step="500" value="7000">
+      </div>
+      <div class="field">
+        <label>Forma opodatkowania spółki</label>
+        <select id="forma_cit">
+          <option value="cit9">CIT 9% (mały podatnik, przychody &lt; 9,2 mln zł)</option>
+          <option value="cit19">CIT 19% (standardowy)</option>
+          <option value="estonski">Estoński CIT (ryczałt od dochodów)</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Czy będziesz wypłacać dywidendę? <span class="hint">szacunkowy procent zysku spółki</span></label>
+        <select id="dywidenda">
+          <option value="0">Nie (reinwestuję w spółkę)</option>
+          <option value="0.5">~50% zysku jako dywidenda</option>
+          <option value="1">~100% zysku jako dywidenda</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()"><span>Oblicz korzyści podatkowe</span></button>
+
+    <!-- WYNIKI -->
+    <div id="wyniki">
+      <div>
+        <div class="results-header">Wyniki analizy</div>
+        <div class="results-sub" id="results-sub-text">Dane szacunkowe na podstawie przepisów podatkowych 2025</div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="card card-jdg">
+          <div class="card-head">JDG – obecna forma</div>
+          <div class="card-body">
+            <div class="line-item"><span class="line-label">Przychód</span><span class="line-value"
+                id="r-przychod-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">Koszty</span><span class="line-value"
+                id="r-koszty-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">Dochód</span><span class="line-value"
+                id="r-dochod-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">ZUS społeczny (rocznie)</span><span class="line-value red"
+                id="r-zus-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">Składka zdrowotna</span><span class="line-value red"
+                id="r-zdr-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">Podatek dochodowy (PIT)</span><span class="line-value red"
+                id="r-pit-jdg">—</span></div>
+            <div class="line-item"><span class="line-label">Łączne obciążenia</span><span class="line-value red"
+                id="r-total-jdg">—</span></div>
+            <div class="total-line">
+              <span class="total-label">Zostaje netto</span>
+              <span class="total-value" id="r-netto-jdg">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-spzoo">
+          <div class="card-head">✦ Sp. z o.o. – wariant docelowy</div>
+          <div class="card-body">
+            <div class="line-item"><span class="line-label">Przychód spółki</span><span class="line-value"
+                id="r-przychod-sp">—</span></div>
+            <div class="line-item"><span class="line-label">Koszty + koszty pracodawcy</span><span class="line-value"
+                id="r-koszty-sp">—</span></div>
+            <div class="line-item"><span class="line-label">Zysk brutto spółki</span><span class="line-value"
+                id="r-zysk-sp">—</span></div>
+            <div class="line-item"><span class="line-label">CIT spółki</span><span class="line-value red"
+                id="r-cit-sp">—</span></div>
+            <div class="line-item"><span class="line-label">Wynagrodzenie netto (prezes)</span><span
+                class="line-value green" id="r-wynagrodzenie-sp">—</span></div>
+            <div class="line-item"><span class="line-label">Dywidenda netto</span><span class="line-value green"
+                id="r-dywidenda-sp">—</span></div>
+            <div class="line-item"><span class="line-label">Łączne podatki i ZUS</span><span class="line-value red"
+                id="r-total-sp">—</span></div>
+            <div class="total-line">
+              <span class="total-label">Zostaje netto</span>
+              <span class="total-value highlight" id="r-netto-sp">—</span>
+            </div>
+            <div id="r-zostaje-sp"
+              style="font-size: 11px; color: var(--muted); margin-top: 8px; text-align: right; display: none;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OSZCZĘDNOŚĆ BANNER -->
+      <div class="savings-banner">
+        <div class="savings-text">
+          <strong id="savings-amount">—</strong>
+          roczna różnica przy przejściu na Sp. z o.o.
+        </div>
+        <div>
+          <div style="font-size:13px; color: rgba(250,248,243,0.6); margin-bottom:6px;">Miesięcznie to:</div>
+          <div style="font-family:'Playfair Display',serif; font-size:28px; color: #DCDCC8;" id="savings-monthly">—
+          </div>
+          <div class="savings-note" id="savings-pct">—</div>
+        </div>
+      </div>
+
+      <!-- SZCZEGÓŁY WYLICZEŃ -->
+      <div class="detail-box">
+        <h4>Jak liczyliśmy — szczegóły 2025</h4>
+        <div id="detail-content"></div>
+      </div>
+
+      <!-- KORZYŚCI -->
+      <div class="benefits-section">
+        <div class="benefits-title">Korzyści poza podatkami</div>
+        <div class="benefits-grid" id="benefits-grid"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h3>Chcesz zobaczyć pełną analizę dla Twojej firmy?</h3>
+        <p>Powyższe liczby to symulacja. Każda firma jest inna — możemy zoptymalizować Twoją sytuację indywidualnie,
+          uwzględniając historię ZUS, umowy z kontrahentami i długofalową strategię.</p>
+        <a href="#" class="cta-btn" onclick="alert('Tu wstaw swój numer / formularz kontaktowy')">📞 Umów bezpłatną
+          konsultację</a>
+        <div class="cta-phone">lub zadzwoń: <a href="tel:+48000000000">+48 000 000 000</a></div>
+      </div>
+
+      <div class="disclaimer">
+        ⚠️ <strong>Zastrzeżenie:</strong> Kalkulator ma charakter wyłącznie informacyjny i edukacyjny. Wyniki są
+        uproszczonymi szacunkami opartymi na przepisach podatkowych 2025. Nie stanowią porady podatkowej ani prawnej.
+        Ostateczna decyzja o zmianie formy prawnej wymaga indywidualnej analizy z doradcą podatkowym.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Narzędzie przygotowane przez <strong>Macieja Kobosa</strong>
+  </footer>
+
+  <script>
+    // ═══════════════════════════════════════════
+    // STAWKI 2025 (aktualne wg ZUS, MF, przepisów)
+    // ═══════════════════════════════════════════
+
+    const S = {
+      // ZUS społeczny (duży ZUS 2025, z chorobowym)
+      ZUS_SPOLECZNE_ROK: 1773.96 * 12,   // 21 287,52 zł/rok (z chorobowym)
+      ZUS_SPOLECZNE_BEZ_CHORO: 1646.47 * 12, // bez chorobowego
+
+      // Fundusz Pracy
+      FP_ROK: 103.37 * 12,               // ~1 240 zł/rok
+
+      // Minimalne wynagrodzenie 2025
+      PLACA_MIN: 4666,
+
+      // Skala podatkowa
+      PROG1: 120000,
+      STAWKA1: 0.12,
+      STAWKA2: 0.32,
+      KWOTA_WOLNA: 30000,
+      ULG_PODATKOWA: 3600,               // 300 zł/mies
+
+      // Liniowy
+      LINIOWY: 0.19,
+
+      // Składka zdrowotna 2025
+      // Liniowy: 4,9% dochodu, min 314,96/mies (od II.2025)
+      ZDR_LINIOWY_PCT: 0.049,
+      ZDR_MIN_ROK: 314.96 * 12,          // 3 779,52 zł
+
+      // Skala: 9% dochodu, min 314,96/mies
+      ZDR_SKALA_PCT: 0.09,
+
+      // Ryczałt 2025 (stawki roczne wg progów przychodu)
+      ZDR_RYCZALT_DO60K: 461.66 * 12,    // 5 539,92 zł
+      ZDR_RYCZALT_60_300K: 769.43 * 12,  // 9 233,16 zł
+      ZDR_RYCZALT_POWYZEJ300K: 1384.97 * 12, // 16 619,64 zł
+
+      // CIT
+      CIT9: 0.09,
+      CIT19: 0.19,
+      CIT_ESTONSKI_MALY: 0.10,
+      CIT_ESTONSKI_DUZY: 0.20,
+
+      // PIT od dywidendy
+      PIT_DYWIDENDA: 0.19,
+
+      // Estoński CIT: odliczenie PIT od CIT
+      ESTONSKI_ODLICZENIE_MALY: 0.90,    // mały podatnik odlicza 90% CIT spółki
+    };
+
+    function fmt(n) {
+      if (n < 0) return '–' + Math.abs(Math.round(n)).toLocaleString('pl-PL') + ' zł';
+      return Math.round(n).toLocaleString('pl-PL') + ' zł';
+    }
+
+    function calcJDG(przychod, koszty, forma, ryczaltStawka) {
+      const dochod = Math.max(0, przychod - koszty);
+      let podatek = 0, zdrowotna = 0;
+      const zus = S.ZUS_SPOLECZNE_ROK;
+      const fp = S.FP_ROK;
+      let details = {};
+
+      if (forma === 'liniowy') {
+        // Zdrowotna: 4,9% od dochodu (po odliczeniu ZUS), min 314,96/mies
+        zdrowotna = Math.max(S.ZDR_MIN_ROK, Math.max(0, dochod - zus) * S.ZDR_LINIOWY_PCT);
+        // Podstawa po odliczeniu ZUS i FP i do 11600 zł zdrowotnej
+        const podstawa = Math.max(0, dochod - zus - fp - Math.min(11600, zdrowotna));
+        podatek = podstawa * S.LINIOWY;
+        details = { podstawa, stawkaPIT: '19% (liniowy)', stawkaZDR: '4,9% dochodu' };
+
+      } else if (forma === 'skala') {
+        const podstawa = Math.max(0, dochod - zus - fp);
+        // Skala: kwota wolna 30 000 zł efektywnie
+        if (podstawa <= S.PROG1) {
+          podatek = Math.max(0, podstawa * S.STAWKA1 - S.ULG_PODATKOWA);
+        } else {
+          podatek = (S.PROG1 * S.STAWKA1 - S.ULG_PODATKOWA) + (podstawa - S.PROG1) * S.STAWKA2;
+        }
+        podatek = Math.max(0, podatek);
+        zdrowotna = Math.max(S.ZDR_MIN_ROK, Math.max(0, dochod - zus) * S.ZDR_SKALA_PCT);
+        details = { podstawa, stawkaPIT: podstawa > S.PROG1 ? '12%/32% (skala)' : '12% (skala)', stawkaZDR: '9% dochodu' };
+
+      } else {
+        // Ryczałt: podatek od przychodu
+        if (przychod <= 60000) zdrowotna = S.ZDR_RYCZALT_DO60K;
+        else if (przychod <= 300000) zdrowotna = S.ZDR_RYCZALT_60_300K;
+        else zdrowotna = S.ZDR_RYCZALT_POWYZEJ300K;
+        // Podstawa po odliczeniu ZUS i FP i 50% zdrowotnej
+        const podstawaRyczalt = Math.max(0, przychod - zus - fp - (zdrowotna * 0.5));
+        podatek = podstawaRyczalt * ryczaltStawka;
+        details = { podstawa: podstawaRyczalt, stawkaPIT: (ryczaltStawka * 100).toFixed(1) + '% ryczałtu', stawkaZDR: 'stała wg progu' };
+      }
+
+      const lacznie = zus + fp + zdrowotna + podatek;
+      const netto = przychod - koszty - lacznie;
+
+      return { przychod, koszty, dochod, zus, fp, zdrowotna, podatek, lacznie, netto, details };
+    }
+
+    function calcSPZOO(przychod, koszty, wynagrodzenieMies, formaCIT, dywidendaFraction) {
+      const wynagrodzenieRoczne = wynagrodzenieMies * 12;
+
+      // Koszty pracodawcy (ZUS od pracownika ~20,48% brutto)
+      const kosztyPracodawcy = wynagrodzenieRoczne * 0.2048;
+      const kosztyCalkowite = koszty + wynagrodzenieRoczne + kosztyPracodawcy;
+
+      const zyskBrutto = Math.max(0, przychod - kosztyCalkowite);
+
+      let cit = 0, dywidenda_netto = 0, dywidenda_brutto = 0, pit_dywidenda = 0;
+      let cit_stawka_label = '';
+
+      if (formaCIT === 'estonski') {
+        // Estoński CIT: podatek TYLKO przy wypłacie dywidendy
+        // Stawka 10% dla małego podatnika
+        dywidenda_brutto = zyskBrutto * dywidendaFraction;
+        const cit_od_dywidendy = dywidenda_brutto * S.CIT_ESTONSKI_MALY;
+        // PIT od dywidendy z odliczeniem 90% CIT spółki (mały podatnik)
+        const pit_do_odliczenia = cit_od_dywidendy * S.ESTONSKI_ODLICZENIE_MALY;
+        pit_dywidenda = Math.max(0, (dywidenda_brutto * S.PIT_DYWIDENDA) - pit_do_odliczenia);
+        dywidenda_netto = dywidenda_brutto - cit_od_dywidendy - pit_dywidenda;
+        cit = cit_od_dywidendy;
+        cit_stawka_label = '10% estoński (przy wypłacie)';
+      } else {
+        const cit_stawka = formaCIT === 'cit9' ? S.CIT9 : S.CIT19;
+        cit_stawka_label = formaCIT === 'cit9' ? '9% (mały podatnik)' : '19% (standardowy)';
+        cit = zyskBrutto * cit_stawka;
+        const zysk_po_cit = zyskBrutto - cit;
+        dywidenda_brutto = zysk_po_cit * dywidendaFraction;
+        pit_dywidenda = dywidenda_brutto * S.PIT_DYWIDENDA;
+        dywidenda_netto = dywidenda_brutto - pit_dywidenda;
+      }
+
+      // Wynagrodzenie netto prezesa (umowa o pracę)
+      // ZUS pracowniczy: emeryt 9,76% + rentowe 1,5% + chorobowe 2,45% = 13,71%
+      const zus_pracownik_pct = 0.1371;
+      const zus_pracownik = wynagrodzenieRoczne * zus_pracownik_pct;
+      // Podstawa do PIT po ZUS
+      const podstawa_pit = Math.max(0, wynagrodzenieRoczne - zus_pracownik);
+      // KUP pracownicze: 3000 zł/rok (ryczałt)
+      const kup = 3000;
+      const podstawa_pit_po_kup = Math.max(0, podstawa_pit - kup);
+      let pit_wynagrodzenie = 0;
+      if (podstawa_pit_po_kup <= S.PROG1) {
+        pit_wynagrodzenie = Math.max(0, podstawa_pit_po_kup * S.STAWKA1 - S.ULG_PODATKOWA);
+      } else {
+        pit_wynagrodzenie = (S.PROG1 * S.STAWKA1 - S.ULG_PODATKOWA) + (podstawa_pit_po_kup - S.PROG1) * S.STAWKA2;
+      }
+      // Zdrowotna pracownicza: 9% podstawy (nieodliczalna od PIT od 2022)
+      const zdr_pracownik = wynagrodzenieRoczne * 0.09;
+
+      // Ograniczenie wynagrodzenia netto
+      let wynagrodzenie_netto = wynagrodzenieRoczne - zus_pracownik - zdr_pracownik - pit_wynagrodzenie;
+      wynagrodzenie_netto = Math.min(wynagrodzenie_netto, wynagrodzenieRoczne);
+
+      // Łączne obciążenia (CIT + PIT od wynagrodzenia + podatek od dywidendy)
+      const pit_dywidenda_final = dywidendaFraction > 0 ? pit_dywidenda : 0;
+      const lacznie_sp = cit + pit_wynagrodzenie + zus_pracownik + zdr_pracownik + Math.max(0, pit_dywidenda_final);
+
+      const netto_total = wynagrodzenie_netto + dywidenda_netto;
+
+      return {
+        przychod, kosztyCalkowite, zyskBrutto, cit, cit_stawka_label,
+        wynagrodzenie_netto, dywidenda_brutto, dywidenda_netto,
+        zus_pracownik, pit_wynagrodzenie,
+        lacznie: lacznie_sp, netto: netto_total,
+        wynagrodzenieRoczne, kosztyPracodawcy
+      };
+    }
+
+    function calculate() {
+      const przychod = parseFloat(document.getElementById('przychod').value) || 0;
+      const koszty = parseFloat(document.getElementById('koszty').value) || 0;
+      const forma = document.getElementById('forma_jdg').value;
+      const ryczaltStawka = parseFloat(document.getElementById('ryczalt_stawka').value);
+      const wynagrodzenie = parseFloat(document.getElementById('wynagrodzenie').value) || 7000;
+      const formaCIT = document.getElementById('forma_cit').value;
+      const dywidenda = parseFloat(document.getElementById('dywidenda').value);
+
+      if (przychod === 0) {
+        alert('Wprowadź przychód roczny, aby obliczyć wyniki.');
+        return;
+      }
+
+      const jdg = calcJDG(przychod, koszty, forma, ryczaltStawka);
+      const sp = calcSPZOO(przychod, koszty, wynagrodzenie, formaCIT, dywidenda);
+
+      // Wypełnij JDG
+      document.getElementById('r-przychod-jdg').textContent = fmt(jdg.przychod);
+      document.getElementById('r-koszty-jdg').textContent = fmt(jdg.koszty);
+      document.getElementById('r-dochod-jdg').textContent = fmt(jdg.dochod);
+      document.getElementById('r-zus-jdg').textContent = '– ' + fmt(jdg.zus + jdg.fp);
+      document.getElementById('r-zdr-jdg').textContent = '– ' + fmt(jdg.zdrowotna);
+      document.getElementById('r-pit-jdg').textContent = '– ' + fmt(jdg.podatek);
+      document.getElementById('r-total-jdg').textContent = fmt(jdg.lacznie);
+      document.getElementById('r-netto-jdg').textContent = fmt(jdg.netto);
+
+      // Wypełnij Sp. z o.o.
+      document.getElementById('r-przychod-sp').textContent = fmt(sp.przychod);
+      document.getElementById('r-koszty-sp').textContent = fmt(sp.kosztyCalkowite);
+      document.getElementById('r-zysk-sp').textContent = fmt(sp.zyskBrutto);
+      document.getElementById('r-cit-sp').textContent = '– ' + fmt(sp.cit) + ' (' + sp.cit_stawka_label + ')';
+      document.getElementById('r-wynagrodzenie-sp').textContent = fmt(sp.wynagrodzenie_netto);
+      document.getElementById('r-dywidenda-sp').textContent = dywidenda > 0 ? fmt(sp.dywidenda_netto) : '0 zł';
+      document.getElementById('r-total-sp').textContent = fmt(sp.lacznie);
+      document.getElementById('r-netto-sp').textContent = fmt(sp.netto);
+
+      const zostajeWSpolce = Math.max(0, sp.zyskBrutto - sp.cit - sp.dywidenda_brutto);
+      const zostajeSpEl = document.getElementById('r-zostaje-sp');
+      if (dywidenda < 1 && zostajeWSpolce > 0) {
+        zostajeSpEl.style.display = 'block';
+        zostajeSpEl.textContent = `Pozostałe ${fmt(zostajeWSpolce)} zysku zostaje w spółce jako majątek firmy`;
+      } else {
+        zostajeSpEl.style.display = 'none';
+      }
+
+      // Oszczędność
+      const oszcz = sp.netto - jdg.netto;
+      const savingsEl = document.getElementById('savings-amount');
+      savingsEl.textContent = (oszcz >= 0 ? '+' : '') + fmt(oszcz);
+      savingsEl.style.color = oszcz >= 0 ? 'var(--gold-light)' : '#e8a090';
+      document.getElementById('savings-monthly').textContent = (oszcz >= 0 ? '+' : '') + fmt(oszcz / 12) + '/mies.';
+      const pct = jdg.netto > 0 ? ((oszcz / Math.abs(jdg.netto)) * 100).toFixed(1) : '0';
+      document.getElementById('savings-pct').textContent = oszcz >= 0
+        ? `+${pct}% więcej niż w JDG`
+        : `${pct}% mniej niż w JDG — rozważ pozostanie w JDG`;
+
+      // Szczegóły wyliczeń
+      const forma_labels = { liniowy: 'Podatek liniowy 19%', skala: 'Skala podatkowa 12/32%', ryczalt: 'Ryczałt ewidencjonowany' };
+      document.getElementById('results-sub-text').textContent = `Dane szacunkowe · JDG: ${forma_labels[forma]} · Spółka: ${sp.cit_stawka_label}`;
+
+      document.getElementById('detail-content').innerHTML = `
+      <div class="detail-row"><span class="label">ZUS społeczny 2025 (z chorobowym)</span><span class="val">1 773,96 zł/mies. = ${fmt(S.ZUS_SPOLECZNE_ROK)}/rok</span></div>
+      <div class="detail-row"><span class="label">Fundusz Pracy 2025</span><span class="val">103,37 zł/mies. = ${fmt(S.FP_ROK)}/rok</span></div>
+      <div class="detail-row"><span class="label">Składka zdrowotna JDG (${jdg.details.stawkaZDR})</span><span class="val">${fmt(jdg.zdrowotna)}/rok</span></div>
+      <div class="detail-row"><span class="label">Stawka PIT JDG</span><span class="val">${jdg.details.stawkaPIT}</span></div>
+      <div class="detail-row"><span class="label">Wynagrodzenie brutto prezesa (rocznie)</span><span class="val">${fmt(sp.wynagrodzenieRoczne)}</span></div>
+      <div class="detail-row"><span class="label">Koszty pracodawcy ZUS (20,48%)</span><span class="val">${fmt(sp.kosztyPracodawcy)}</span></div>
+      <div class="detail-row"><span class="label">CIT spółki</span><span class="val">${sp.cit_stawka_label} → ${fmt(sp.cit)}</span></div>
+      <div class="detail-row"><span class="label">Podatek od dywidendy (19%)</span><span class="val">${dywidenda > 0 ? fmt(sp.dywidenda_brutto * S.PIT_DYWIDENDA) : 'brak wypłaty dywidendy'}</span></div>
+    `;
+
+      // Korzyści
+      const benefits = [
+        { icon: '🛡️', title: 'Ograniczona odpowiedzialność', text: 'Majątek prywatny oddzielony od majątku firmy. Chronisz rodzinę i oszczędności.' },
+        { icon: '📋', title: 'Wiarygodność biznesowa', text: 'Większe kontrakty, lepsze negocjacje z dużymi klientami i bankami.' },
+        { icon: '💼', title: 'Sprzedaż i sukcesja', text: 'Udziały łatwo zbyć, można pozyskać inwestora lub sprzedać spółkę.' },
+        { icon: '🚗', title: 'Leasing i koszty auta', text: 'Pełne koszty samochodu i leasingu w spółce bez limitów 75%.' },
+        { icon: '👥', title: 'Skalowanie i wspólnicy', text: 'Łatwe wejście wspólników, opcje pracownicze, ESOP.' },
+        { icon: '📊', title: formaCIT === 'estonski' ? 'Estoński CIT' : 'Reinwestycja', text: formaCIT === 'estonski' ? 'Zerowy podatek na zyski reinwestowane — płacisz CIT dopiero przy wypłacie.' : 'Zyski zatrzymane w spółce rosną bez natychmiastowego opodatkowania.' },
+      ];
+
+      document.getElementById('benefits-grid').innerHTML = benefits.map(b => `
+      <div class="benefit-card">
+        <div class="benefit-icon">${b.icon}</div>
+        <div class="benefit-text"><strong>${b.title}</strong><span>${b.text}</span></div>
+      </div>
+    `).join('');
+
+      const wyniki = document.getElementById('wyniki');
+      wyniki.style.display = 'block';
+      setTimeout(() => wyniki.classList.add('visible'), 10);
+      wyniki.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+
+</html>
